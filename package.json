@@ -1,0 +1,19 @@
+{
+  "name": "aborted-promise",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/hrdwdmrbl/aborted-promise.git"
+  },
+  "author": "Marc Beaupré-Pham",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hrdwdmrbl/aborted-promise/issues"
+  },
+  "homepage": "https://github.com/hrdwdmrbl/aborted-promise#readme"
+}
