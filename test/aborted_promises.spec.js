@@ -84,4 +84,17 @@ describe('AbortablePromise', function() {
             done();
         }, 100);
     });
+
+    it('should be chain-able', function(done) {
+        var firstPromise = new AbortablePromise(function(resolve, reject) {
+            resolve();
+        });
+        var secondPromise = firstPromise.then(function(error) {
+            throw new Error('Should not be here');
+        });
+        secondPromise.abort();
+        setTimeout(function() {
+            done();
+        }, 100);
+    });
 });

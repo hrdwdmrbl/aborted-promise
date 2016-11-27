@@ -7,21 +7,20 @@ var AbortablePromise = function(promiseCallback) {
   this.aborted = false;
   this.finished = false;
   var that = this;
-  this.p = new Promise(function(resolve, reject) {
-    process.nextTick(function() {
-      try {
-        promiseCallback(function(result) {
-          that._resolve(resolve, result);
-        }, function(error) {
-          that._reject(reject, error);
-        });
-      } catch (error) {
-        that._reject(reject, error);
-      }
+  var realPromise = new Promise(promiseCallback).then(function(result) {
+    return new Promise(function(resolve, reject) {
+      that._resolve(resolve, result);
+    });
+  }).catch(function(error) {
+    return new Promise(function(resolve, reject) {
+      that._reject(reject, error);
     });
   });
+  realPromise.abort = function() {
+    that.abort();
+  };
+  return realPromise;
 };
-AbortablePromise.prototype = Object.create(Promise.prototype);
 
 AbortablePromise.prototype._resolve = function(resolve, result) {
   if (!this.aborted && !this.finished) {
@@ -34,14 +33,6 @@ AbortablePromise.prototype._reject = function(reject, error) {
       this.finished = true;
       reject(error);
     }
-};
-
-AbortablePromise.prototype.then = function() {
-  return this.p.then.apply(this.p, arguments);
-};
-
-AbortablePromise.prototype.catch = function() {
-  return this.p.catch.apply(this.p, arguments);
 };
 
 AbortablePromise.prototype.abort = function() {
