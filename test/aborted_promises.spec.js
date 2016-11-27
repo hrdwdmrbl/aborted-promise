@@ -38,16 +38,47 @@ describe('AbortablePromise', function() {
         });
     });
 
-    it('should be abort-able with arg', function(done) {
+    it('should be abort-able, resolve', function(done) {
         var promise = new AbortablePromise(function(resolve, reject) {
             resolve('foo');
         });
         promise.abort();
         promise.catch(function() {
+            console.log('GOT HERE catch')
             throw new Error('NO!');
         });
         promise.then(function() {
+            console.log('GOT HERE then')
             throw new Error('NO!');
+        });
+        setTimeout(function() {
+            done();
+        }, 100);
+    });
+
+    it('should be abort-able, reject', function(done) {
+        var promise = new AbortablePromise(function(resolve, reject) {
+            reject('foo');
+        });
+        promise.abort();
+        promise.catch(function() {
+            throw new Error('Should not be here');
+        });
+        promise.then(function() {
+            throw new Error('Should not be here');
+        });
+        setTimeout(function() {
+            done();
+        }, 100);
+    });
+
+    it('should be abort-able, error', function(done) {
+        var promise = new AbortablePromise(function(resolve, reject) {
+            throw new Error('NONONO');
+        });
+        promise.abort();
+        promise.catch(function(error) {
+            throw new Error('Should not be here');
         });
         setTimeout(function() {
             done();
