@@ -85,13 +85,23 @@ describe('AbortablePromise', function() {
         }, 100);
     });
 
-    it('should be chain-able', function(done) {
+    it.only('should be chain-able', function(done) {
         var firstPromise = new AbortablePromise(function(resolve, reject) {
+            console.log(1);
             resolve();
         });
-        var secondPromise = firstPromise.then(function(error) {
+        var secondPromise = firstPromise.then(function() {
+            console.log(4);
+            return new AbortablePromise(function(resolve) {
+                console.log(5);
+                resolve();
+            });
+        });
+        secondPromise.then(function() {
+            console.log(6);
             throw new Error('Should not be here');
         });
+        console.log('abort');
         secondPromise.abort();
         setTimeout(function() {
             done();
