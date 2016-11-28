@@ -17,7 +17,7 @@ var makeAbortable = function(regularPromise) {
   };
   wrappedPromise.then = function(callback) {
     var p = new AbortablePromise();
-    p.then(callback);
+    var potentialPromise = ... p.then(callback);
     return p;
   };
   wrappedPromise.catch = function(callback) {
